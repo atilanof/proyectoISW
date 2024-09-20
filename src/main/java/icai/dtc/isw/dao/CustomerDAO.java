@@ -12,7 +12,7 @@ public class CustomerDAO {
 	
 	
 	
-	public static void getClientes(ArrayList<Customer> lista) {
+	public void getClientes(ArrayList<Customer> lista) {
 		Connection con=ConnectionDAO.getInstance().getConnection();
 		try (PreparedStatement pst = con.prepareStatement("SELECT * FROM usuarios");
                 ResultSet rs = pst.executeQuery()) {
@@ -25,19 +25,25 @@ public class CustomerDAO {
 
             System.out.println(ex.getMessage());
         }
+
 	}
-	public static Customer getCliente(int id) {
+	public Customer getCliente(int id) {
 		Connection con=ConnectionDAO.getInstance().getConnection();
 		Customer cu=null;
-		try (PreparedStatement pst = con.prepareStatement("SELECT * FROM usuarios WHERE id="+id);
-			 ResultSet rs = pst.executeQuery()) {
+		String consulta = "SELECT * FROM usuarios WHERE id = ?";
 
-			while (rs.next()) {
-				cu= new Customer(rs.getString(1),rs.getString(2));
+		try (PreparedStatement pst = con.prepareStatement(consulta)) {
+			// Asignar el valor del parámetro
+			pst.setInt(1, id);  // El primer parámetro "?" se reemplaza por el valor de 'id'
+
+			try (ResultSet rs = pst.executeQuery()) {
+				// Procesar el resultado
+				if (rs.next()) {
+					cu = new Customer(rs.getString(1), rs.getString(2));  // Obtener los datos de la fila resultante
+				}
 			}
 
 		} catch (SQLException ex) {
-
 			System.out.println(ex.getMessage());
 		}
 		return cu;
@@ -46,9 +52,9 @@ public class CustomerDAO {
 	
 	public static void main(String[] args) {
 		
-		
+		CustomerDAO customerDAO=new CustomerDAO();
 		ArrayList<Customer> lista= new ArrayList<>();
-		CustomerDAO.getClientes(lista);
+		customerDAO.getClientes(lista);
 		
 		
 		 for (Customer customer : lista) {			
