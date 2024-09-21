@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import icai.dtc.isw.domain.Customer;
 
 public class CustomerDAO {
-	
-	
-	
+
 	public void getClientes(ArrayList<Customer> lista) {
 		Connection con=ConnectionDAO.getInstance().getConnection();
 		try (PreparedStatement pst = con.prepareStatement("SELECT * FROM usuarios");
