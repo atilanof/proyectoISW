@@ -4,6 +4,8 @@ import icai.dtc.isw.domain.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -13,6 +15,7 @@ public class CustomerDAOTest {
 
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.openMocks(this); // Inicializar Mockito
         customerDAO = Mockito.mock(CustomerDAO.class);
     }
 
