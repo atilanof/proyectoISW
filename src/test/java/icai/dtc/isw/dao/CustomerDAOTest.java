@@ -3,20 +3,21 @@ package icai.dtc.isw.dao;
 import icai.dtc.isw.domain.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class CustomerDAOTest {
 
-    private CustomerDAO customerDAO;
+    @Mock
+    private CustomerDAO customerDAO;  // Simulación de CustomerDAO
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this); // Inicializar Mockito
-        customerDAO = Mockito.mock(CustomerDAO.class);
+        // Inicializar los mocks
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -24,7 +25,7 @@ public class CustomerDAOTest {
         // Crear un objeto de cliente simulado
         Customer expectedCustomer = new Customer("123", "Atilano");
 
-        // Simular el comportamiento del método getCustomerById
+        // Simular el comportamiento del método getCliente
         when(customerDAO.getCliente(123)).thenReturn(expectedCustomer);
 
         // Llamar al método
@@ -35,6 +36,7 @@ public class CustomerDAOTest {
         assertEquals("123", actualCustomer.getId());
         assertEquals("Atilano", actualCustomer.getName());
 
-
+        // Verificar que el método getCliente fue llamado
+        verify(customerDAO, times(1)).getCliente(123);
     }
 }
