@@ -14,10 +14,16 @@ public class CustomerDAOTest {
     @Mock
     private CustomerDAO customerDAO;  // Simulación de CustomerDAO
 
+    @InjectMocks
+    private CustomerDAOTest customerDAOTest; // Inyectar mocks en esta clase
+
+
     @BeforeEach
     public void setUp() {
         // Inicializar los mocks
         MockitoAnnotations.openMocks(this);
+        // Inicializar manualmente el customerDAO
+        customerDAO = mock(CustomerDAO.class);
     }
 
     @Test
