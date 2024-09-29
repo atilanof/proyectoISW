@@ -11,7 +11,7 @@ public class CustomerTest {
 
     @BeforeEach
     public void setUp() {
-        customer = new Customer("1", "Paco");
+        customer = new Customer("1", "Beltran");
     }
 
     @Test
@@ -27,7 +27,7 @@ public class CustomerTest {
 
     @Test
     public void testGetName() {
-        assertEquals("Paco", customer.getName());
+        assertEquals("Beltran", customer.getName());
     }
 
     @Test
