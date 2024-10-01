@@ -5,7 +5,7 @@ CONTAINER_NAME=postgres
 
 # Credenciales de la base de datos
 DB_USER="postgres"
-DB_NAME="isw"
+DB_NAME="isw" #Esto se deberá modificar para cada grupo
 DB_PASSWORD="postgres"
 
 # Archivo de backup a restaurar
