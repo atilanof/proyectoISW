@@ -7,7 +7,7 @@ WORKDIR /app
 # Copia el JAR en el contenedor
 COPY target/server_isw.jar /app/server_isw.jar
 
-# Exponer el puerto 8081
+# Exponer el puerto 8081.
 EXPOSE 8081
 
 # Comando para ejecutar la aplicación
