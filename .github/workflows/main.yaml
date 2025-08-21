@@ -1,0 +1,41 @@
+name: Build and Deploy (Main)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Setup Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'  # o 'temurin', 'zulu', etc.
+          java-version: '17'
+
+      - name: Build
+        run: mvn clean compile
+
+      - name: Test
+        run: mvn test
+
+      - name: Package
+        run: mvn package
+
+      - name: Deploy to AWS
+        run: |
+          echo "Comando real de despliegue a producción"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

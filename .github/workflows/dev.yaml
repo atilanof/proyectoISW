@@ -1,0 +1,44 @@
+name: Build and Deploy (Develop)
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: eu-west-1
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Setup Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'  # o 'temurin', 'zulu', etc.
+          java-version: '17'
+
+      - name: Compilar
+        run: mvn clean compile
+
+      - name: Test
+        run: mvn test
+
+      - name: Empaquetar
+        run: mvn package
+
+      #- name: Desplegar en AWS
+          #  run: |
+        #echo "Aquí iría el comando para desplegar a tu instancia EC2, ECS, Lambda, etc."
+          #env:
+          #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
