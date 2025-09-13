@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>This is easy!</comment>
-	<entry key="ddbb.connection">jdbc:postgresql://ec2-3-90-204-136.compute-1.amazonaws.com:5432/isw</entry>
+	<entry key="ddbb.connection">jdbc:postgresql://ec2-35-172-200-53.compute-1.amazonaws.com:5432/isw</entry>
 	<entry key="ddbb.user">postgres</entry>
 	<entry key="ddbb.password">postgres</entry>
 	<entry key="host">127.0.0.1</entry>	
