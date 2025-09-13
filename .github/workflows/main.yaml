@@ -18,28 +18,24 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
-
-      - name: Deploy on AWS EC2
-        uses: appleboy/scp-action@master
+      - name: Setup Maven
+        uses: actions/setup-java@v3
         with:
-          host: ${{ secrets.AWS_HOST }}
-          username: ${{ secrets.AWS_USER }}
-          key: ${{ secrets.AWS_SSH_KEY }}
-          source: "target/*.jar"
-          target: "~/app/app.jar"
+          distribution: 'corretto'  # o 'temurin', 'zulu', etc.
+          java-version: '17'
 
-      - name: Run Docker in AWS EC2
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.AWS_HOST }}
-          username: ${{ secrets.AWS_USER }}
-          key: ${{ secrets.AWS_SSH_KEY }}
-          script: |
-            cd ~/app
-            docker stop server_isw || true
-            docker rm server_isw || true
-            docker rmi server_isw_image || true
-            docker build -t server_isw_image .
-            docker run -d -p 8081:8081 --name server_isw server_isw_image
+      - name: Build
+        run: mvn clean compile
+
+      - name: Test
+        run: mvn test
+
+      - name: Package
+        run: mvn package
+
+      - name: Deploy to AWS
+        run: |
+          echo "Comando real de despliegue a producción"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
