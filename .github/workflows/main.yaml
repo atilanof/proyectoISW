@@ -27,7 +27,7 @@ jobs:
           host: ${{ secrets.AWS_HOST }}
           username: ${{ secrets.AWS_USER }}
           key: ${{ secrets.AWS_SSH_KEY }}
-          source: "target/*.jar"
+          source: "target/*.jar,Dockerfile"
           target: "~/app/app.jar"
 
       - name: Run Docker in AWS EC2
