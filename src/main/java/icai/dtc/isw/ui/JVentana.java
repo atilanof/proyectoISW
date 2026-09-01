@@ -1,78 +1,83 @@
 package icai.dtc.isw.ui;
 
-import icai.dtc.isw.client.Client;
-import icai.dtc.isw.domain.Customer;
-
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.HashMap;
 
 public class JVentana extends JFrame {
+
+    public static final String PANTALLA_HOME = "HOME";
+    public static final String PANTALLA_LOGIN = "LOGIN";
+    public static final String PANTALLA_REGISTER = "REGISTER";
+    public static final String PANTALLA_REGISTER_OK = "REGISTER_OK";
+
+    private final CardLayout cards = new CardLayout();
+    private final JPanel root = new JPanel(cards);
+    private final AuthApi auth = new AuthApi();
+
     public static void main(String[] args) {
-        new JVentana();
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception ignored) {}
+        SwingUtilities.invokeLater(() -> new JVentana().setVisible(true));
     }
-    private int id;
+
     public JVentana() {
-        super("INGENIERÍA DEL SOFTWARE");
-        this.setLayout(new BorderLayout());
-        //Pongo un panel arriba con el título
-        JPanel pnlNorte = new JPanel();
-        JLabel lblTitulo = new JLabel("Prueba COMUNICACIÓN", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Courier", Font.BOLD, 20));
-        pnlNorte.add(lblTitulo);
-        this.add(pnlNorte, BorderLayout.NORTH);
+        super("CONNEXA APP");
+        Image icon = new ImageIcon(getClass().getResource("/icons/connexa_mini.png")).getImage();
+        setIconImage(icon);
 
-        //Pongo el panel central el botón
-        JPanel pnlCentro = new JPanel();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        JLabel lblId = new JLabel("Introduzca el id", SwingConstants.CENTER);
-        JButton btnInformacion = new JButton("Recibir información");
-        JTextField txtId = new JTextField();
-        txtId.setBounds(new Rectangle(250,150,250,150));
-        txtId.setHorizontalAlignment(JTextField.LEFT);
-        pnlCentro.add(lblId);
-        pnlCentro.add(txtId);
-        pnlCentro.add(btnInformacion);
-        pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.	X_AXIS));
-        this.add(pnlCentro, BorderLayout.CENTER);
+        JPanel pnlNorte = new UIUtils.GradientBar(new Color(10, 23, 42), new Color(20, 40, 80));
+        pnlNorte.setLayout(new BorderLayout());
+        JLabel lblTitulo = new JLabel("CONNEXA", SwingConstants.CENTER);
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 22));
+        pnlNorte.setBorder(new EmptyBorder(12, 12, 12, 12));
+        pnlNorte.add(lblTitulo, BorderLayout.CENTER);
+        add(pnlNorte, BorderLayout.NORTH);
 
-        //El Sur lo hago para recoger el resultado
-        JPanel pnlSur = new JPanel();
-        JLabel lblResultado = new JLabel("El resultado obtenido es: ", SwingConstants.CENTER);
-        JTextField txtResultado = new JTextField();
-        txtResultado.setBounds(new Rectangle(250,150,250,150));
-        txtResultado.setEditable(false);
-        txtResultado.setHorizontalAlignment(JTextField.LEFT);
-        pnlSur.add(lblResultado);
-        pnlSur.add(txtResultado);
-        //Añado el listener al botón
-        btnInformacion.addActionListener(actionEvent -> {
-            id=Integer.parseInt(txtId.getText());
-            txtResultado.setText(recuperarInformacion());
-        });
-        pnlSur.setLayout(new BoxLayout(pnlSur, BoxLayout.X_AXIS));
-        this.add(pnlSur,BorderLayout.SOUTH);
+        root.setBackground(new Color(245, 247, 250));
+        add(root, BorderLayout.CENTER);
 
-        this.setSize(550,120);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
+        // Pantallas
+        root.add(new HomePanel(
+                this::irLogin,
+                this::irRegister
+        ), PANTALLA_HOME);
+
+        root.add(new LoginPanel(
+                auth,
+                user -> { // onLoginOk
+                    SwingUtilities.invokeLater(() -> new AppMovilMock(user).setVisible(true));
+                    dispose();
+                },
+                this::irHome
+        ), PANTALLA_LOGIN);
+
+        root.add(new RegisterPanel(
+                auth,
+                () -> cards.show(root, PANTALLA_LOGIN), // tras OK, ir a login
+                this::irHome
+        ), PANTALLA_REGISTER);
+
+        root.add(new RegisterOkPanel(() -> cards.show(root, PANTALLA_HOME)), PANTALLA_REGISTER_OK);
+
+        setSize(360, 640);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        cards.show(root, PANTALLA_HOME);
     }
 
-    public String recuperarInformacion() {
-        Client cliente=new Client();
-        HashMap<String,Object> session=new HashMap<>();
-        String context="/getCustomer";
-        session.put("id",id);
-        session=cliente.sentMessage(context,session);
-        Customer cu=(Customer)session.get("Customer");
-        String nombre;
-        if (cu==null) {
-            nombre="Error - No encontrado en la base de datos";
-        }else {
-            nombre=cu.getName();
-        }
-        return nombre;
-    }
+    /* Navegación rápida */
+    private void irHome()    { cards.show(root, PANTALLA_HOME); }
+    private void irLogin()   { cards.show(root, PANTALLA_LOGIN); }
+    private void irRegister(){ cards.show(root, PANTALLA_REGISTER); }
 }
