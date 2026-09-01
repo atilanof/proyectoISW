@@ -15,6 +15,8 @@ import icai.dtc.isw.controler.CustomerControler;
 import icai.dtc.isw.domain.Customer;
 import icai.dtc.isw.message.Message;
 
+//Comentario
+
 public class SocketServer extends Thread {
 	public static int port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
 

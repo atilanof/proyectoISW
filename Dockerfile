@@ -12,3 +12,5 @@ EXPOSE 8081
 
 # Comando para ejecutar la aplicación
 CMD ["java", "-jar", "server_isw.jar"]
+
+#Comentario
