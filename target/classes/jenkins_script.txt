@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    environment {
+        GITHUB_CREDENTIALS_ID = 'GitHub'
+        WEBHOOK_SECRET = credentials('github-webhook-secret')
+    }
+    triggers {
+        githubPush()
+        pollSCM('H/5 * * * *') // Revisa los cambios cada 5 minutos en el github
+    }
+    tools {
+        maven 'Maven'  // Asegúrate de que este nombre coincida con el configurado en Jenkins
+        jdk 'JDK17'         // Asegúrate de que este nombre coincida con el configurado en Jenkins
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/atilanof/proyectoISW.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}

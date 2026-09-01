@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>This is easy!</comment>
+	<entry key="ddbb.connection">jdbc:postgresql://ec2-13-60-40-17.eu-north-1.compute.amazonaws.com:5432/postgres</entry>
+	<entry key="ddbb.user">postgres</entry>
+	<entry key="ddbb.password">postgres</entry>
+	<entry key="host">127.0.0.1</entry>
+	<entry key="port">8081</entry>
+</properties>
